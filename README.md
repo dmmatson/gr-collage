@@ -8,15 +8,19 @@ This was created out of personal desire to print and frame posters representing 
 ### Requirements
 * Python 3
 
+### Steps
+
 Go to your "read" bookshelf on Goodreads. Order by "Date read" descending. Copy the URL. It should look something like this:
 ```
-https://www.goodreads.com/review/list/58160628-emily-books-with-emily-fox-on-youtube?order=d&per_page=100&shelf=read&sort=date_read&utf8=%E2%9C%93page=1
+https://www.goodreads.com/review/list/58160628-emily-books-with-emily-fox-on-youtube?order=d&per_page=100&shelf=read&sort=date_read&page=1
 ```
 
 Remove the page # from the end, but leave the `page=`. If it's not at the end, move it there. It should look like this:
 ```
-https://www.goodreads.com/review/list/58160628-emily-books-with-emily-fox-on-youtube?order=d&per_page=100&shelf=read&sort=date_read&utf8=%E2%9C%93page=
+https://www.goodreads.com/review/list/58160628-emily-books-with-emily-fox-on-youtube?order=d&per_page=100&shelf=read&sort=date_read&page=
 ```
+
+(Note: I had problems with the `utf8` URL parameter, so I removed it. You may have to escape characters in the query string depending on your shell.)
 
 Feed this URL into the script:
 
@@ -25,6 +29,10 @@ virtualenv -p python3 venv
 source venv/bin/activate
 pip install -r requirements.txt
 python3 main.py -u <url>
+
+e.g.
+
+python3 main.py -u python3 main.py -u https://www.goodreads.com/review/list/58160628-emily-books-with-emily-fox-on-youtube\?order\=d\&per_page\=100\&shelf\=read\&sort\=date_read\&page\=
 ```
 
 There's also this code...
