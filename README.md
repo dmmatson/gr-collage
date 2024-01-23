@@ -32,7 +32,7 @@ python3 main.py -u <url>
 
 e.g.
 
-python3 main.py -u python3 main.py -u https://www.goodreads.com/review/list/58160628-emily-books-with-emily-fox-on-youtube\?order\=d\&per_page\=100\&shelf\=read\&sort\=date_read\&page\=
+python3 main.py -u https://www.goodreads.com/review/list/58160628-emily-books-with-emily-fox-on-youtube\?order\=d\&per_page\=100\&shelf\=read\&sort\=date_read\&page\=
 ```
 
 There's also this code...
