@@ -50,6 +50,13 @@ parser.add_argument(
     help="URL to read shelf, with page= at the end",
     required=True
 )
+parser.add_argument(
+    "-d",
+    "--date",
+    choices=["date_read", "date_added", "none"],
+    default="date_read",
+    help='Which date to use to limit how many books are shown. Default: date_read. Set to "none" to show all books'
+)
 
 args = parser.parse_args()
 
@@ -85,27 +92,28 @@ while not done:
         )
         title = book.find("td", {"class": "field title"}).text.replace("\n", "").strip()
 
-        date_read = (
-            book.find("td", {"class": "date_read"})
-            .text.replace("date read", "")
-            .replace("not set", "")
-        )
-        date_read = list(filter(None, date_read.split("\n")))
-        date_read = date_read[0]
-        if len(date_read.replace(",", " ").split(" ")) < 3:
-            month, year = date_read.replace(",", " ").split(" ")
-            date_read = f"{month} 1, {year}"
-        date_read = datetime.strptime(date_read, "%b %d, %Y")
+        if args.date != "none":
+            date = (
+                book.find("td", {"class": args.date})
+                .text.replace("date read", "")
+                .replace("not set", "")
+            )
+            date = list(filter(None, date.split("\n")))
+            if len(date) > 0:
+                date = date[0]
+                if len(date.replace(",", " ").split(" ")) < 3:
+                    month, year = date.replace(",", " ").split(" ")
+                    date = f"{month} 1, {year}"
+                date = datetime.strptime(date, "%b %d, %Y")
+                if date < datetime.now() - timedelta(days=1 * args.ago):
+                    done = True
+                    break
 
         if "nophoto" in cover_url:
             continue
 
-        if date_read > datetime.now() - timedelta(days=1 * 365):
-            print(title, date_read, cover_url)
-            covers.append(cover_url)
-        else:
-            done = True
-            break
+        print(title, date, cover_url)
+        covers.append(cover_url)
 
 # Download covers
 print("\n")
