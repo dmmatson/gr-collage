@@ -143,16 +143,19 @@ while not done:
 
 # Download covers
 print("\n")
+filenames = []
 for i, cover in enumerate(covers):
     print(f"Download progress: {round((float(i) / len(covers)) * 100)}%")
     image = requests.get(cover).content
-    with open(f"image{i}.jpg", "wb") as handler:
+    filename = f"image{i}.jpg"
+    with open(filename, "wb") as handler:
         handler.write(image)
+    filenames.append(filename)
 
 
 # Adjust number of images so we have a rectangle
 print("\n")
-image_paths = glob.glob("image*.jpg")
+image_paths = filenames
 image_paths = natsorted(image_paths)
 num_imgs = len(image_paths)
 width, height = find_largest_factors(num_imgs)
