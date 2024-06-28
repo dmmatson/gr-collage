@@ -51,7 +51,7 @@ if date_read > datetime.now() - timedelta(days=1 * 365):
 
 ### Raw Output
 
-![collage](https://github.com/dmmatson/gr-collage/blob/main/collage.jpg?raw=true)
+![images/collage](https://github.com/dmmatson/gr-collage/blob/main/collage.jpg?raw=true)
 
 ### Inspiration (with additional manual editing)
 ![frame](https://github.com/dmmatson/gr-collage/blob/main/frame.png?raw=true)
