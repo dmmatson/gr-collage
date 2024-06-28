@@ -70,6 +70,18 @@ parser.add_argument(
     help="Minimum width of collage. Default 6",
     default=6,
 )
+parser.add_argument(
+    "--min-height",
+    type=int,
+    help="Minimum height of collage. Default 6",
+    default=6,
+)
+parser.add_argument(
+    "-s",
+    "--swap-width-height",
+    action="store_true",
+    help="Swaps preference from width to height, for rectangular layout algorithm. Enable if you want a wide image. Also use min-height."
+)
 
 args = parser.parse_args()
 
@@ -158,14 +170,24 @@ print("\n")
 image_paths = filenames
 image_paths = natsorted(image_paths)
 num_imgs = len(image_paths)
-width, height = find_largest_factors(num_imgs)
-while width < args.min_width:
-    if len(image_paths) == 0:
-        print("Could not find layout. Try reducing image width with --min-width.")
-        exit(1)
-    print(f"Adjust for rectangle, pruning {image_paths.pop()}")
-    num_imgs = len(image_paths)
+if not args.swap_width_height:
     width, height = find_largest_factors(num_imgs)
+    while width < args.min_width:
+        if len(image_paths) == 0:
+            print("Could not find layout. Try reducing image width with --min-width.")
+            exit(1)
+        print(f"Adjust for rectangle, pruning {image_paths.pop()}")
+        num_imgs = len(image_paths)
+        width, height = find_largest_factors(num_imgs)
+else:
+    height, width = find_largest_factors(num_imgs)
+    while height < args.min_height:
+        if len(image_paths) == 0:
+            print("Could not find layout. Try reducing image height with --min-height.")
+            exit(1)
+        print(f"Adjust for rectangle, pruning {image_paths.pop()}")
+        num_imgs = len(image_paths)
+        height, width = find_largest_factors(num_imgs)
 
 # Create collage
 print("\n")
