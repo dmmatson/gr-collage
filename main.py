@@ -57,6 +57,13 @@ parser.add_argument(
     default="date_read",
     help='Which date to use to limit how many books are shown. Default: date_read. Set to "none" to show all books'
 )
+parser.add_argument(
+    "-a",
+    "--ago",
+    type=int,
+    help="Number of days to collage backwards to, default 365",
+    default=365,
+)
 
 args = parser.parse_args()
 
