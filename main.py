@@ -64,6 +64,12 @@ parser.add_argument(
     help="Number of days to collage backwards to, default 365",
     default=365,
 )
+parser.add_argument(
+    "--min-width",
+    type=int,
+    help="Minimum width of collage. Default 6",
+    default=6,
+)
 
 args = parser.parse_args()
 
@@ -137,7 +143,10 @@ image_paths = glob.glob("image*.jpg")
 image_paths = natsorted(image_paths)
 num_imgs = len(image_paths)
 width, height = find_largest_factors(num_imgs)
-while width < 6:
+while width < args.min_width:
+    if len(image_paths) == 0:
+        print("Could not find layout. Try reducing image width with --min-width.")
+        exit(1)
     print(f"Adjust for rectangle, pruning {image_paths.pop()}")
     num_imgs = len(image_paths)
     width, height = find_largest_factors(num_imgs)
