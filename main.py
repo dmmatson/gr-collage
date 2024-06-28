@@ -44,13 +44,14 @@ def find_largest_factors(even_number):
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-u", "--url", help="URL to read shelf, with page= at the end")
+parser.add_argument(
+    "-u",
+    "--url",
+    help="URL to read shelf, with page= at the end",
+    required=True
+)
 
 args = parser.parse_args()
-
-if not args.url:
-    parser.print_help(sys.stderr)
-    exit()
 
 # Get read book cover URLs
 page = 0
