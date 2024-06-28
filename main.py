@@ -106,11 +106,21 @@ while not done:
         title = book.find("td", {"class": "field title"}).text.replace("\n", "").strip()
 
         if args.date != "none":
-            date = (
-                book.find("td", {"class": args.date})
-                .text.replace("date read", "")
-                .replace("not set", "")
-            )
+            if args.date == "date_read":
+                date = (
+                    book.find("span", {"class": f"{args.date}_value"})
+                    .text
+                    .replace("not set", "")
+                )
+            elif args.date == "date_added":
+                date = (
+                    book.find("td", {"class": f"{args.date}"})
+                    .find("div", {"class", "value"})
+                    .find("span")
+                    .text
+                    .replace("not set", "")
+                    .strip()
+                )
             date = list(filter(None, date.split("\n")))
             if len(date) > 0:
                 date = date[0]
@@ -125,7 +135,10 @@ while not done:
         if "nophoto" in cover_url:
             continue
 
-        print(title, date, cover_url)
+        if args.date == "none":
+            print(title, cover_url)
+        else:
+            print(title, date, cover_url)
         covers.append(cover_url)
 
 # Download covers
