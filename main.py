@@ -66,7 +66,7 @@ while not done:
     print(f"Getting page {url}")
     response = requests.get(url, headers=headers)
     html = response.content
-    soup = BeautifulSoup(html)
+    soup = BeautifulSoup(html, "html.parser")
 
     table = soup.find("table", {"id": "books"})
     books = table.find_all("tr", {"class": "bookalike review"})
