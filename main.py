@@ -70,6 +70,9 @@ while not done:
 
     table = soup.find("table", {"id": "books"})
     books = table.find_all("tr", {"class": "bookalike review"})
+    if len(books) == 0:
+        print("reached final page!")
+        done = True
 
     for book in books:
         cover_url = (
