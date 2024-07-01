@@ -44,13 +44,46 @@ def find_largest_factors(even_number):
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-u", "--url", help="URL to read shelf, with page= at the end")
+parser.add_argument(
+    "-u",
+    "--url",
+    help="URL to read shelf, with page= at the end",
+    required=True
+)
+parser.add_argument(
+    "-d",
+    "--date",
+    choices=["date_read", "date_added", "none"],
+    default="date_read",
+    help='Which date to use to limit how many books are shown. Default: date_read. Set to "none" to show all books'
+)
+parser.add_argument(
+    "-a",
+    "--ago",
+    type=int,
+    help="Number of days to collage backwards to, default 365",
+    default=365,
+)
+parser.add_argument(
+    "--min-width",
+    type=int,
+    help="Minimum width of collage. Default 6",
+    default=6,
+)
+parser.add_argument(
+    "--min-height",
+    type=int,
+    help="Minimum height of collage. Default 6",
+    default=6,
+)
+parser.add_argument(
+    "-s",
+    "--swap-width-height",
+    action="store_true",
+    help="Swaps preference from width to height, for rectangular layout algorithm. Enable if you want a wide image. Also use min-height."
+)
 
 args = parser.parse_args()
-
-if not args.url:
-    parser.print_help(sys.stderr)
-    exit()
 
 # Get read book cover URLs
 page = 0
@@ -65,10 +98,13 @@ while not done:
     print(f"Getting page {url}")
     response = requests.get(url, headers=headers)
     html = response.content
-    soup = BeautifulSoup(html)
+    soup = BeautifulSoup(html, "html.parser")
 
     table = soup.find("table", {"id": "books"})
     books = table.find_all("tr", {"class": "bookalike review"})
+    if len(books) == 0:
+        print("reached final page!")
+        done = True
 
     for book in books:
         cover_url = (
@@ -81,47 +117,77 @@ while not done:
         )
         title = book.find("td", {"class": "field title"}).text.replace("\n", "").strip()
 
-        date_read = (
-            book.find("td", {"class": "date_read"})
-            .text.replace("date read", "")
-            .replace("not set", "")
-        )
-        date_read = list(filter(None, date_read.split("\n")))
-        date_read = date_read[0]
-        if len(date_read.replace(",", " ").split(" ")) < 3:
-            month, year = date_read.replace(",", " ").split(" ")
-            date_read = f"{month} 1, {year}"
-        date_read = datetime.strptime(date_read, "%b %d, %Y")
+        if args.date != "none":
+            if args.date == "date_read":
+                date = (
+                    book.find("span", {"class": f"{args.date}_value"})
+                    .text
+                    .replace("not set", "")
+                )
+            elif args.date == "date_added":
+                date = (
+                    book.find("td", {"class": f"{args.date}"})
+                    .find("div", {"class", "value"})
+                    .find("span")
+                    .text
+                    .replace("not set", "")
+                    .strip()
+                )
+            date = list(filter(None, date.split("\n")))
+            if len(date) > 0:
+                date = date[0]
+                if len(date.replace(",", " ").split(" ")) < 3:
+                    month, year = date.replace(",", " ").split(" ")
+                    date = f"{month} 1, {year}"
+                date = datetime.strptime(date, "%b %d, %Y")
+                if date < datetime.now() - timedelta(days=1 * args.ago):
+                    done = True
+                    break
 
         if "nophoto" in cover_url:
             continue
 
-        if date_read > datetime.now() - timedelta(days=1 * 365):
-            print(title, date_read, cover_url)
-            covers.append(cover_url)
+        if args.date == "none":
+            print(title, cover_url)
         else:
-            done = True
-            break
+            print(title, date, cover_url)
+        covers.append(cover_url)
 
 # Download covers
 print("\n")
+filenames = []
 for i, cover in enumerate(covers):
     print(f"Download progress: {round((float(i) / len(covers)) * 100)}%")
     image = requests.get(cover).content
-    with open(f"image{i}.jpg", "wb") as handler:
+    filename = f"image{i}.jpg"
+    with open(filename, "wb") as handler:
         handler.write(image)
+    filenames.append(filename)
 
 
 # Adjust number of images so we have a rectangle
 print("\n")
-image_paths = glob.glob("image*.jpg")
+image_paths = filenames
 image_paths = natsorted(image_paths)
 num_imgs = len(image_paths)
-width, height = find_largest_factors(num_imgs)
-while width < 6:
-    print(f"Adjust for rectangle, pruning {image_paths.pop()}")
-    num_imgs = len(image_paths)
+if not args.swap_width_height:
     width, height = find_largest_factors(num_imgs)
+    while width < args.min_width:
+        if len(image_paths) == 0:
+            print("Could not find layout. Try reducing image width with --min-width.")
+            exit(1)
+        print(f"Adjust for rectangle, pruning {image_paths.pop()}")
+        num_imgs = len(image_paths)
+        width, height = find_largest_factors(num_imgs)
+else:
+    height, width = find_largest_factors(num_imgs)
+    while height < args.min_height:
+        if len(image_paths) == 0:
+            print("Could not find layout. Try reducing image height with --min-height.")
+            exit(1)
+        print(f"Adjust for rectangle, pruning {image_paths.pop()}")
+        num_imgs = len(image_paths)
+        height, width = find_largest_factors(num_imgs)
 
 # Create collage
 print("\n")
