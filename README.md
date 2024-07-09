@@ -35,12 +35,24 @@ e.g.
 python3 main.py -u https://www.goodreads.com/review/list/58160628-emily-books-with-emily-fox-on-youtube\?order\=d\&per_page\=100\&shelf\=read\&sort\=date_read\&page\=
 ```
 
-There's also this code...
-```python
-if date_read > datetime.now() - timedelta(days=1 * 365):
-```
+You can customize the output via the following optional parameters:
 
-...that limits to books read in the last year. Adjust as needed.
+```
+-d {date_read,date_added,none}, --date {date_read,date_added,none}
+  Which date to use to limit how many books are shown. Default: date_read. Set to "none" to show all books
+
+-a AGO, --ago AGO
+  Number of days to collage backwards to, default 365
+
+--min-width MIN_WIDTH
+  Minimum width of collage. Default 6
+
+--min-height MIN_HEIGHT
+  Minimum height of collage. Default 6
+
+-s, --swap-width-height
+  Swaps preference from width to height, for rectangular layout algorithm. Enable if you want a wide image. Also use min-height.
+```
 
 # Notes
 
@@ -51,7 +63,7 @@ if date_read > datetime.now() - timedelta(days=1 * 365):
 
 ### Raw Output
 
-![images/collage](https://github.com/dmmatson/gr-collage/blob/main/collage.jpg?raw=true)
+![images/collage](https://github.com/gr-collage/blob/main/images/collage.jpg)
 
 ### Inspiration (with additional manual editing)
 ![frame](https://github.com/dmmatson/gr-collage/blob/main/frame.png?raw=true)
