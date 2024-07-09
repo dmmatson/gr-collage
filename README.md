@@ -63,7 +63,7 @@ You can customize the output via the following optional parameters:
 
 ### Raw Output
 
-![images/collage](https://github.com/gr-collage/blob/main/images/collage.jpg)
+![images/collage](https://github.com/dmmatson/gr-collage/blob/main/images/collage.jpg)
 
 ### Inspiration (with additional manual editing)
 ![frame](https://github.com/dmmatson/gr-collage/blob/main/frame.png?raw=true)
