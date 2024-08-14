@@ -19,7 +19,7 @@ multidict==6.0.5
 mypy-extensions==1.0.0
 natsort==8.4.0
 numpy==1.26.4
-opencv-python==4.9.0.80
+opencv-python==4.10.0.84
 packaging==24.1
 pathspec==0.12.1
 Pillow==10.3.0
