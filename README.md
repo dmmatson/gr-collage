@@ -6,7 +6,7 @@ This was created out of personal desire to print and frame posters representing 
 # How do I use it?
 
 ### Requirements
-* Python 3
+* Python 3.10
 
 ### Steps
 
