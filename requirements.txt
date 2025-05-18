@@ -23,7 +23,7 @@ opencv-python==4.10.0.84
 packaging==24.2
 pathspec==0.12.1
 Pillow==10.4.0
-platformdirs==4.2.2
+platformdirs==4.3.7
 pyparsing==3.2.0
 python-dateutil==2.9.0.post0
 requests==2.32.3
