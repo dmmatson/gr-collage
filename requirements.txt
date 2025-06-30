@@ -15,7 +15,7 @@ idna==3.7
 importlib-resources==6.4.4
 kiwisolver==1.4.5
 matplotlib==3.9.2
-multidict==6.0.5
+multidict==6.6.2
 mypy-extensions==1.0.0
 natsort==8.4.0
 numpy==1.26.4
