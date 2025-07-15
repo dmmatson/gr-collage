@@ -31,6 +31,6 @@ six==1.16.0
 soupsieve==2.6
 tomli==2.2.1
 typing_extensions==4.12.2
-urllib3==2.3.0
+urllib3==2.5.0
 yarl==1.17.1
 zipp==3.21.0
